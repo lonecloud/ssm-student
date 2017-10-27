@@ -27,7 +27,5 @@ hs_err_pid*
 *.iml
 .DS_Store
 .idea/
-pom.xml
-src/
 student.iml
 target/
