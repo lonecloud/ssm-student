@@ -35,7 +35,7 @@
         <button id="btn_edit" type="button" class="btn btn-default" onclick="editOne()">
             <span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span>修改
         </button>
-        <button id="btn_delete" type="button" class="btn btn-default" >
+        <button id="btn_delete" type="button" class="btn btn-default" onclick="delOne()">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
         </button>
     </div>
@@ -230,9 +230,16 @@
             }
         })
     }
+    /**
+     * 添加
+     **/
     function add() {
         isUpdate=false;
     }
+
+    /**
+     * 编辑一个
+     */
     function editOne() {
         var tdIds=$("[name='btSelectItem']:checked").parent().next();
         if(tdIds.length>1||tdIds.length==0){
@@ -242,6 +249,18 @@
         edit(tdIds[0].innerText);
         $("#studentModal").modal();
 
+    }
+
+    /**
+     * 删除一条
+     */
+    function delOne() {
+        var tdIds=$("[name='btSelectItem']:checked").parent().next();
+        if(tdIds.length>1||tdIds.length==0){
+            alert("只能选择一条数据进行删除");
+            return;
+        }
+        del(tdIds[0].innerText);
     }
 </script>
 </html>
