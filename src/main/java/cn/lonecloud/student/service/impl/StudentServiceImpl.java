@@ -24,14 +24,14 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public PageListVO<Student> listByPage(int offset, int limit) {
-        List<Student> studentList=studentMapper.selectByPage(offset,limit);
-        int count=studentMapper.selectCount();
-        return new PageListVO<Student>(count,studentList);
+        List<Student> studentList = studentMapper.selectByPage(offset, limit);
+        int count = studentMapper.selectCount();
+        return new PageListVO<Student>(count, studentList);
     }
 
     @Override
     public R<Student> selectOne(String id) {
-        if (StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             return R.error("id不能为空");
         }
         Student student = studentMapper.selectByPrimaryKey(Integer.valueOf(id));
@@ -40,10 +40,31 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public R delete(String id) {
-        if (StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             return R.error("id不能为空");
         }
         int i = studentMapper.deleteByPrimaryKey(Integer.valueOf(id));
+        return R.success();
+    }
+
+    @Override
+    public R<Student> add(Student student) {
+
+        int insert = studentMapper.insert(student);
+        if (insert == 0) {
+            return R.error("添加失败");
+        } else {
+            return R.success();
+        }
+    }
+
+    @Override
+    public R update(Student student) {
+        if (student != null & student.getId() != null) {
+            studentMapper.updateByPrimaryKeySelective(student);
+        }else{
+            return R.error("参数传递错误");
+        }
         return R.success();
     }
 }

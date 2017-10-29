@@ -17,4 +17,8 @@ public interface IStudentService {
     R<Student> selectOne(String id);
 
     R delete(String id);
+
+    R<Student> add(Student student);
+
+    R update(Student student);
 }

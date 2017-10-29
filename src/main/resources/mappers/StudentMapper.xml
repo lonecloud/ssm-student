@@ -20,7 +20,7 @@
     from sys_student
     where id = #{id,jdbcType=INTEGER}
   </select>
-    <select id="selectByPage" resultType="cn.lonecloud.student.pojo.Student">
+    <select id="selectByPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM sys_student

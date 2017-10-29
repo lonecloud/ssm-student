@@ -29,11 +29,11 @@
 </div>
 <div class="container">
     <div id="toolbar" class="btn-group">
-        <button id="btn_add" type="button" class="btn btn-default" onclick="add()">
+        <button id="btn_add" type="button" class="btn btn-default" onclick="add()"  data-toggle="modal" data-target="#studentModal" data-whatever="增加">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
         </button>
-        <button id="btn_edit" type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
+        <button id="btn_edit" type="button" class="btn btn-default" onclick="editOne()">
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span>修改
         </button>
         <button id="btn_delete" type="button" class="btn btn-default" >
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
@@ -53,6 +53,7 @@
             </div>
             <div class="modal-body">
                 <form>
+                    <input type="hidden" class="form-control" id="hideenId" >
                     <div class="form-group">
                         <label class="control-label" for="name">名字：</label>
                         <input type="text" class="form-control" id="name" >
@@ -69,7 +70,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">确定</button>
+                <button type="button" class="btn btn-primary" onclick="saveOrUpdate()">确定</button>
             </div>
         </div>
     </div>
@@ -80,6 +81,7 @@
 <script src="${pageContext.request.contextPath}/assets/js/bootstrap-table.min.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/bootstrap-table-zh-CN.min.js"></script>
 <script>
+    var isUpdate=true;
     $(function () {
         initTable();//初始化table
 
@@ -163,29 +165,63 @@
      * @param id
      */
     function edit(id) {
+        isUpdate=true;
         $.ajax({
             url:"${pageContext.request.contextPath}/student/select/"+id,
             type:"GET",
             dataType:"json",
-            success:function(data){
-                if(data!=null) {
-                    $("#name").val(data.name);
-                    $("#age-text").val(data.age);
-                    $("#major-text").val(data.major);
+            success:function(r){
+                if(r.status==200) {
+                    $("#name").val(r.data.name);
+                    $("#hideenId").val(r.data.id);
+                    $("#age-text").val(r.data.age);
+                    $("#major-text").val(r.data.major);
+                }else {
+                    alert("加载数据错误");
                 }
             },
             error:function(data){
-                alert(data);
+                alert(data.msg);
             }
         });
     }
+    function saveOrUpdate() {
+        var url="${pageContext.request.contextPath}/student/add";
+        if(isUpdate){
+            url="${pageContext.request.contextPath}/student/update/"+$("#hideenId").val();
+        }
+        $.ajax({
+            url:url,
+            type:"POST",
+            dataType:"json",
+            data:{
+                name:$("#name").val(),
+                age:$("#age-text").val(),
+                major:$("#major-text").val(),
+            },
+            success:function (r) {
+                if(r.status==200){
+                    location.reload()
+                }
+                if(r.status==500){
+                    alert("新增成功");
+                }
+            }
+        });
+    }
+    /**
+     * 删除
+     * @param id
+     */
     function del(id) {
         $.ajax({
             url:"${pageContext.request.contextPath}/student/delete/"+id,
             type:"GET",
             dataType:"json",
             success:function (data) {
-                if(data!=null){
+                if(data.status==200){
+                    location.reload()
+                }else {
                     alert(data.msg);
                 }
             },
@@ -193,6 +229,19 @@
                 alert("删除失败");
             }
         })
+    }
+    function add() {
+        isUpdate=false;
+    }
+    function editOne() {
+        var tdIds=$("[name='btSelectItem']:checked").parent().next();
+        if(tdIds.length>1||tdIds.length==0){
+            alert("只能选择一条数据进行修改");
+            return;
+        }
+        edit(tdIds[0].innerText);
+        $("#studentModal").modal();
+
     }
 </script>
 </html>
