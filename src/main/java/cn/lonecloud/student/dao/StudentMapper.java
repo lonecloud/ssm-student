@@ -21,4 +21,6 @@ public interface StudentMapper {
     List<Student> selectByPage(@Param("offset") int offset, @Param("limit") int limit);
 
     int selectCount();
+
+    List<Student> seletAll();
 }

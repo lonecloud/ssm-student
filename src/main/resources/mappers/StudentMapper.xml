@@ -29,6 +29,11 @@
     <select id="selectCount" resultType="java.lang.Integer">
         select count(1) FROM sys_student
     </select>
+    <select id="seletAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from sys_student
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from sys_student
     where id = #{id,jdbcType=INTEGER}

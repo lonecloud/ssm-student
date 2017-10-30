@@ -3,6 +3,9 @@ package cn.lonecloud.student.service;
 import cn.lonecloud.student.pojo.Student;
 import cn.lonecloud.student.vo.PageListVO;
 import cn.lonecloud.student.vo.R;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 /**
  * @author lonecloud
@@ -21,4 +24,8 @@ public interface IStudentService {
     R<Student> add(Student student);
 
     R update(Student student);
+
+    R importStudentExcel(MultipartFile file);
+
+    File exportStudent();
 }
