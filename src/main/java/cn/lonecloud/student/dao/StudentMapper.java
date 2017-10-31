@@ -37,4 +37,10 @@ public interface StudentMapper {
      * @return
      */
     List<Student> seletAll();
+
+    int insertBatch(@Param("studentList") List<Student> studentList);
+
+    List<Student> searchByPage(@Param("search") String search, @Param("offset") int offset, @Param("limit") int limit);
+
+    int selectSearchCount(@Param("search") String search, @Param("offset") int offset, @Param("limit") int limit);
 }

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.lonecloud.student.dao.StudentMapper" >
-  <resultMap id="BaseResultMap" type="cn.lonecloud.student.pojo.Student" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="age" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="major" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-    </constructor>
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="cn.lonecloud.student.dao.StudentMapper">
+    <resultMap id="BaseResultMap" type="cn.lonecloud.student.pojo.Student">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="age" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="major" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, name, age, major, create_time, update_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from sys_student
-    where id = #{id,jdbcType=INTEGER}
-  </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_student
+        where id = #{id,jdbcType=INTEGER}
+    </select>
     <select id="selectByPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
@@ -34,11 +34,29 @@
         <include refid="Base_Column_List"/>
         from sys_student
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="searchByPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_student
+        <if test="search != null and search != ''">
+        WHERE CONCAT(`id`, `name`, `age`, `major`) LIKE #{search}
+        </if>
+        Limit #{offset},#{limit}
+    </select>
+    <select id="selectSearchCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM sys_student
+        <if test="search != null and search != ''">
+            WHERE CONCAT(`id`, `name`, `age`, `major`) LIKE #{search}
+        </if>
+        Limit #{offset},#{limit}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sys_student
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="cn.lonecloud.student.pojo.Student" >
+    <insert id="insert" parameterType="cn.lonecloud.student.pojo.Student">
     insert into sys_student (id, name, age, 
       major, create_time, update_time
       )
@@ -46,71 +64,77 @@
       #{major,jdbcType=VARCHAR}, now(), now()
       )
   </insert>
-  <insert id="insertSelective" parameterType="cn.lonecloud.student.pojo.Student" >
-    insert into sys_student
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="age != null" >
-        age,
-      </if>
-      <if test="major != null" >
-        major,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="age != null" >
-        #{age,jdbcType=INTEGER},
-      </if>
-      <if test="major != null" >
-        #{major,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.lonecloud.student.pojo.Student" >
-    update sys_student
-    <set >
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="age != null" >
-        age = #{age,jdbcType=INTEGER},
-      </if>
-      <if test="major != null" >
-        major = #{major,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="cn.lonecloud.student.pojo.Student" >
+    <insert id="insertSelective" parameterType="cn.lonecloud.student.pojo.Student">
+        insert into sys_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="age != null">
+                age,
+            </if>
+            <if test="major != null">
+                major,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=INTEGER},
+            </if>
+            <if test="major != null">
+                #{major,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBatch">
+        INSERT INTO sys_student(id, name, age, major, create_time, update_time) VALUES
+        <foreach collection="studentList" item="item" separator=",">
+            (#{item.id},#{item.name},#{item.age},#{item.major},now(),now())
+        </foreach>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.lonecloud.student.pojo.Student">
+        update sys_student
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                age = #{age,jdbcType=INTEGER},
+            </if>
+            <if test="major != null">
+                major = #{major,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.lonecloud.student.pojo.Student">
     update sys_student
     set name = #{name,jdbcType=VARCHAR},
       age = #{age,jdbcType=INTEGER},

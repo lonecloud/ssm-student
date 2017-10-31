@@ -1,6 +1,7 @@
 package cn.lonecloud.student.controller;
 
 import cn.lonecloud.student.common.CommonController;
+import cn.lonecloud.student.cts.Rcts;
 import cn.lonecloud.student.exception.BusinessException;
 import cn.lonecloud.student.pojo.Student;
 import cn.lonecloud.student.service.IStudentService;
@@ -51,14 +52,16 @@ public class StudentController extends CommonController {
     @GetMapping("/loadListData")
     @ResponseBody
     public Object loadListData(@RequestParam(value = "offset", defaultValue = "offset", required = false) int offset,
-                               @RequestParam(value = "limit", defaultValue = "10", required = false) int limit) {
+                               @RequestParam(value = "limit", defaultValue = "10", required = false) int limit,
+                               @RequestParam(value = "search",required = false)String search) {
         try {
-            PageListVO<Student> pageListVO = studentService.listByPage(offset, limit);
+            PageListVO<Student> pageListVO = studentService.searchByPage(search,offset, limit);
             return pageListVO;
         } catch (Exception e) {
             if (e instanceof BusinessException) {
                 logger.debug(e.getMessage());
             }
+            e.printStackTrace();
             logger.error(e.getStackTrace().toString(), e.getMessage());
         }
         return new PageListVO<>(0);
@@ -116,18 +119,21 @@ public class StudentController extends CommonController {
 
     /**
      * 导入
+     *
      * @param file
      * @return
      */
     @PostMapping("/import")
-    @ResponseBody
-    public R importStudent(MultipartFile file) {
+    //@ResponseBody
+    public String importStudent(MultipartFile file) {
         //文件上传后处理文件
-        return studentService.importStudentExcel(file);
+        R r = studentService.importStudentExcel(file);
+        return "redirect:/student/list";
     }
 
     /**
      * 导出
+     *
      * @param request
      * @return
      * @throws IOException

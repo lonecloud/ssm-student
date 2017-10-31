@@ -28,4 +28,6 @@ public interface IStudentService {
     R importStudentExcel(MultipartFile file);
 
     File exportStudent();
+
+    PageListVO<Student> searchByPage(String search, int offset, int limit);
 }

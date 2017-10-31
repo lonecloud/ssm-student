@@ -29,7 +29,7 @@ import java.util.UUID;
 @Service
 public class StudentServiceImpl implements IStudentService {
 
-    private static final Logger logger= LoggerFactory.getLogger(StudentServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
     @Autowired
     StudentMapper studentMapper;
@@ -74,7 +74,7 @@ public class StudentServiceImpl implements IStudentService {
     public R update(Student student) {
         if (student != null & student.getId() != null) {
             studentMapper.updateByPrimaryKeySelective(student);
-        }else{
+        } else {
             return R.error("参数传递错误");
         }
         return R.success();
@@ -85,7 +85,7 @@ public class StudentServiceImpl implements IStudentService {
         String fileName = file.getOriginalFilename();
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
         String realFileName = UUID.randomUUID().toString() + "." + fileType;
-        String filePath = RequestUtils.getRequest().getServletPath();
+        String filePath = RequestUtils.getRequest().getServletContext().getRealPath("/WEB-INF");
         File fileDir = new File(filePath);
         if (!fileDir.exists()) {
             fileDir.setWritable(true);
@@ -97,9 +97,10 @@ public class StudentServiceImpl implements IStudentService {
             //处理Excel数据
             List<String[]> readExcelContent = ExcelUtils.readExcelContent(tempFile);
             //构建数据
-            List<Student> studentList=buildStudentList(readExcelContent);
+            List<Student> studentList = buildStudentList(readExcelContent);
+            int count = studentMapper.insertBatch(studentList);
             return R.success();
-        }catch (IOException e){
+        } catch (IOException e) {
             logger.error(e.toString());
             return R.error("导入失败");
         }
@@ -107,11 +108,11 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public File exportStudent() {
-        List<Student> studentList=studentMapper.seletAll();
+        List<Student> studentList = studentMapper.seletAll();
         try {
-            File file=ExcelUtils.exportExcel(studentList,RequestUtils.getRequest().getSession().getServletContext().getRealPath(File.separator)+
-                            UUID.randomUUID().toString()+".xls",
-                    new String[]{"id","名字","年龄","学科","创建时间"},"updateTime");
+            File file = ExcelUtils.exportExcel(studentList, RequestUtils.getRequest().getSession().getServletContext().getRealPath(File.separator) +
+                            UUID.randomUUID().toString() + ".xls",
+                    new String[]{"id", "名字", "年龄", "学科", "创建时间"}, "updateTime");
             return file;
         } catch (IOException e) {
             logger.error(e.toString());
@@ -121,12 +122,25 @@ public class StudentServiceImpl implements IStudentService {
         return null;
     }
 
+    @Override
+    public PageListVO<Student> searchByPage(String search, int offset, int limit) {
+        if (search != null && !search.isEmpty()) {
+            search="%"+search+"%";
+            List<Student> studentList = studentMapper.searchByPage(search, offset, limit);
+            int count = studentMapper.selectSearchCount(search, offset, limit);
+            return new PageListVO<Student>(count, studentList);
+        }else {
+            return this.listByPage(offset,limit);
+        }
+    }
+
     private List<Student> buildStudentList(List<String[]> readExcelContent) {
 
-        List<Student> studentList= Lists.newArrayList();
-        Student student=null;
-        readExcelContent.stream().forEach((items)->{
+        List<Student> studentList = Lists.newArrayList();
+        readExcelContent.remove(0);//删除第一行标示
+        readExcelContent.stream().forEach((items) -> {
 //            不设置id
+            Student student = new Student();
             //student.setId(Integer.valueOf(items[0]));
             student.setName(items[1]);
             student.setAge(Integer.valueOf(items[2]));

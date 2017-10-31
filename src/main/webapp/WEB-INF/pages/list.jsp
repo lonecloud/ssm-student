@@ -29,16 +29,18 @@
 </div>
 <div class="container">
     <div id="toolbar" class="btn-group">
-        <button id="btn_add" type="button" class="btn btn-default" onclick="add()"  data-toggle="modal" data-target="#studentModal" data-whatever="增加">
+        <button id="btn_add" type="button" class="btn btn-default" onclick="add()" data-toggle="modal"
+                data-target="#studentModal" data-whatever="增加">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
         </button>
         <button id="btn_edit" type="button" class="btn btn-default" onclick="editOne()">
-            <span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span>修改
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
         </button>
         <button id="btn_delete" type="button" class="btn btn-default" onclick="delOne()">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
         </button>
-        <button id="import" class="btn btn-default" href="${pageContext.request.contextPath}/student/import">
+        <button id="import" class="btn btn-default" class="btn btn-default" data-toggle="modal"
+                data-target="#importModal" data-whatever="导入">
             <span class="glyphicon glyphicon-export" aria-hidden="true"></span>导入
         </button>
         <a id="export" class="btn btn-default" href="${pageContext.request.contextPath}/student/export">
@@ -54,15 +56,16 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
                 <h4 class="modal-title" id="titeLabel">学生信息</h4>
             </div>
             <div class="modal-body">
                 <form>
-                    <input type="hidden" class="form-control" id="hideenId" >
+                    <input type="hidden" class="form-control" id="hideenId">
                     <div class="form-group">
                         <label class="control-label" for="name">名字：</label>
-                        <input type="text" class="form-control" id="name" >
+                        <input type="text" class="form-control" id="name">
                     </div>
                     <div class="form-group">
                         <label for="age-text" class="control-label">年龄:</label>
@@ -81,13 +84,35 @@
         </div>
     </div>
 </div>
+
+<%--导入模态框--%>
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="titeLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">导入</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/student/import" method="post" id="importForm" enctype="multipart/form-data">
+                    <input type="file" name="file">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="importStudent()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <script src="${pageContext.request.contextPath}/assets/js/jquery-2.1.4.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/bootstrap-table.min.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/bootstrap-table-zh-CN.min.js"></script>
 <script>
-    var isUpdate=true;
+    var isUpdate = true;
     $(function () {
         initTable();//初始化table
 
@@ -171,84 +196,87 @@
      * @param id
      */
     function edit(id) {
-        isUpdate=true;
+        isUpdate = true;
         $.ajax({
-            url:"${pageContext.request.contextPath}/student/select/"+id,
-            type:"GET",
-            dataType:"json",
-            success:function(r){
-                if(r.status==200) {
+            url: "${pageContext.request.contextPath}/student/select/" + id,
+            type: "GET",
+            dataType: "json",
+            success: function (r) {
+                if (r.status == 200) {
                     $("#name").val(r.data.name);
                     $("#hideenId").val(r.data.id);
                     $("#age-text").val(r.data.age);
                     $("#major-text").val(r.data.major);
-                }else {
+                } else {
                     alert("加载数据错误");
                 }
             },
-            error:function(data){
+            error: function (data) {
                 alert(data.msg);
             }
         });
     }
+
     function saveOrUpdate() {
-        var url="${pageContext.request.contextPath}/student/add";
-        if(isUpdate){
-            url="${pageContext.request.contextPath}/student/update/"+$("#hideenId").val();
+        var url = "${pageContext.request.contextPath}/student/add";
+        if (isUpdate) {
+            url = "${pageContext.request.contextPath}/student/update/" + $("#hideenId").val();
         }
         $.ajax({
-            url:url,
-            type:"POST",
-            dataType:"json",
-            data:{
-                name:$("#name").val(),
-                age:$("#age-text").val(),
-                major:$("#major-text").val(),
+            url: url,
+            type: "POST",
+            dataType: "json",
+            data: {
+                name: $("#name").val(),
+                age: $("#age-text").val(),
+                major: $("#major-text").val(),
             },
-            success:function (r) {
-                if(r.status==200){
+            success: function (r) {
+                if (r.status == 200) {
                     location.reload()
                 }
-                if(r.status==500){
+                if (r.status == 500) {
                     alert("新增成功");
                 }
             }
         });
     }
+
     /**
      * 删除
      * @param id
      */
     function del(id) {
         $.ajax({
-            url:"${pageContext.request.contextPath}/student/delete/"+id,
-            type:"GET",
-            dataType:"json",
-            success:function (data) {
-                if(data.status==200){
+            url: "${pageContext.request.contextPath}/student/delete/" + id,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                if (data.status == 200) {
                     location.reload()
-                }else {
+                } else {
                     alert(data.msg);
                 }
             },
-            error:function (data) {
+            error: function (data) {
                 alert("删除失败");
             }
         })
     }
+
     /**
      * 添加
      **/
     function add() {
-        isUpdate=false;
+        isUpdate = false;
     }
 
     /**
      * 编辑一个
      */
     function editOne() {
-        var tdIds=$("[name='btSelectItem']:checked").parent().next();
-        if(tdIds.length>1||tdIds.length==0){
+        var tdIds = $("[name='btSelectItem']:checked").parent().next();
+        if (tdIds.length > 1 || tdIds.length == 0) {
             alert("只能选择一条数据进行修改");
             return;
         }
@@ -261,12 +289,15 @@
      * 删除一条
      */
     function delOne() {
-        var tdIds=$("[name='btSelectItem']:checked").parent().next();
-        if(tdIds.length>1||tdIds.length==0){
+        var tdIds = $("[name='btSelectItem']:checked").parent().next();
+        if (tdIds.length > 1 || tdIds.length == 0) {
             alert("只能选择一条数据进行删除");
             return;
         }
         del(tdIds[0].innerText);
+    }
+    function importStudent() {
+        $("#importForm").submit();
     }
 </script>
 </html>
