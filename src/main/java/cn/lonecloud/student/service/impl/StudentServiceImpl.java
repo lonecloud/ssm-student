@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -95,6 +96,7 @@ public class StudentServiceImpl implements IStudentService {
             file.transferTo(tempFile);
             //处理Excel数据
             List<String[]> readExcelContent = ExcelUtils.readExcelContent(tempFile);
+            //构建数据
             List<Student> studentList=buildStudentList(readExcelContent);
             return R.success();
         }catch (IOException e){
@@ -122,7 +124,16 @@ public class StudentServiceImpl implements IStudentService {
     private List<Student> buildStudentList(List<String[]> readExcelContent) {
 
         List<Student> studentList= Lists.newArrayList();
-
+        Student student=null;
+        readExcelContent.stream().forEach((items)->{
+//            不设置id
+            //student.setId(Integer.valueOf(items[0]));
+            student.setName(items[1]);
+            student.setAge(Integer.valueOf(items[2]));
+            student.setMajor(items[3]);
+            student.setCreateTime(new Date());
+            studentList.add(student);
+        });
         return studentList;
     }
 }

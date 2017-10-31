@@ -24,5 +24,10 @@ public interface UserMapper {
      */
     User selectUserByNameAndPwd(@Param("username") String username, @Param("password") String password);
 
+    /**
+     * 通过用户名查找用户
+     * @param username
+     * @return
+     */
     int selectCountByUsername(String username);
 }

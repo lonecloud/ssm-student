@@ -70,7 +70,7 @@ public class StudentController extends CommonController {
      * @param id
      * @return
      */
-    @GetMapping("select/{id}")
+    @GetMapping("/select/{id}")
     @ResponseBody
     public R<Student> selectOne(@PathVariable("id") String id) {
         return studentService.selectOne(id);
@@ -108,13 +108,17 @@ public class StudentController extends CommonController {
      * @param id
      * @return
      */
-    @GetMapping("delete/{id}")
+    @GetMapping("/delete/{id}")
     @ResponseBody
     public R delete(@PathVariable("id") String id) {
         return studentService.delete(id);
     }
 
-
+    /**
+     * 导入
+     * @param file
+     * @return
+     */
     @PostMapping("/import")
     @ResponseBody
     public R importStudent(MultipartFile file) {
@@ -122,6 +126,12 @@ public class StudentController extends CommonController {
         return studentService.importStudentExcel(file);
     }
 
+    /**
+     * 导出
+     * @param request
+     * @return
+     * @throws IOException
+     */
     @GetMapping("/export")
     public ResponseEntity<byte[]> exportStudent(HttpServletRequest request) throws IOException {
         File file = studentService.exportStudent();

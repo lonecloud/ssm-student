@@ -38,6 +38,9 @@
         <button id="btn_delete" type="button" class="btn btn-default" onclick="delOne()">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
         </button>
+        <button id="import" class="btn btn-default" href="${pageContext.request.contextPath}/student/import">
+            <span class="glyphicon glyphicon-export" aria-hidden="true"></span>导入
+        </button>
         <a id="export" class="btn btn-default" href="${pageContext.request.contextPath}/student/export">
             <span class="glyphicon glyphicon-export" aria-hidden="true"></span>导出
         </a>

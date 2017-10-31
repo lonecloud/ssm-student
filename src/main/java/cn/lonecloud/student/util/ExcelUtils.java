@@ -24,6 +24,11 @@ public class ExcelUtils {
     private static final String XLS="xls";
     private static final String XLSX="xlsx";
 
+    /**
+     * 导出数据
+     * @param file
+     * @return
+     */
     public static List<String[]> readExcelContent(File  file) {
         List<String[]>  content = Lists.newArrayList();
         String str = "";
@@ -56,6 +61,11 @@ public class ExcelUtils {
         return content;
     }
 
+    /**
+     * 获取cell值
+     * @param cell
+     * @return
+     */
     private static String getCellFormatValue(HSSFCell cell) {
         String cellvalue = "";
         if (cell != null) {
@@ -99,6 +109,16 @@ public class ExcelUtils {
         return cellvalue;
     }
 
+    /**
+     * 导出Excel
+     * @param dataList 数据
+     * @param filePath 文件路径
+     * @param columnNames 列名字
+     * @param excludeFiledName 排除的数据值名
+     * @return
+     * @throws IOException
+     * @throws IllegalAccessException
+     */
     public static File exportExcel(List dataList, String filePath,String[] columnNames,
                                    String... excludeFiledName) throws IOException, IllegalAccessException {
         File file=new File(filePath);

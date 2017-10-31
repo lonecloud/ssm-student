@@ -18,9 +18,23 @@ public interface StudentMapper {
 
     int updateByPrimaryKey(Student record);
 
+    /**
+     * 按照页面数据进行筛选
+     * @param offset
+     * @param limit
+     * @return
+     */
     List<Student> selectByPage(@Param("offset") int offset, @Param("limit") int limit);
 
+    /**
+     * 统计用户的总数
+     * @return
+     */
     int selectCount();
 
+    /**
+     * 筛选所有的用户
+     * @return
+     */
     List<Student> seletAll();
 }
