@@ -29,7 +29,7 @@
     <div class="row myCenter">
         <div class="col-xs-6 col-md-4 col-center-block">
             <form class="form-signin" method="post" action="${pageContext.request.contextPath}/user/doRegister">
-                <h2 class="form-signin-heading ">请登录${param.msg}</h2>
+                <h2 class="form-signin-heading ">注册${param.msg}</h2>
                 <input type="hidden" name="location" id="location">
                 <label for="username" class="sr-only">用户名</label>
                 <input type="text" name="username" id="username" class="form-control" placeholder="用户名" required autofocus>
@@ -39,11 +39,9 @@
                 <input type="password" id="rePassword" name="rePassword" class="form-control" placeholder="确认密码" required>
                 <div id="msg" class="hidden"></div>
                 <div class="checkbox">
-                    <label>
-                        <input type="checkbox" value="remember-me">
-                        记住我 </label>
+                    <a class="pull-right" href="${pageContext.request.contextPath}/user/login" id="register">登录</a>
                 </div>
-                <button class="btn btn-lg btn-primary btn-block" type="submit" id="submitForm">登录</button>
+                <button class="btn btn-lg btn-primary btn-block" type="submit" id="submitForm">注册</button>
             </form>
         </div>
     </div>

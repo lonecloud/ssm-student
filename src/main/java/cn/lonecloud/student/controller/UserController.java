@@ -29,19 +29,34 @@ public class UserController extends CommonController {
     @Autowired
     IUserService userService;
 
+    /**
+     * 登录
+     * @return
+     */
     @GetMapping("/login")
     public String login(){
         return "login";
     }
 
-
+    /**
+     * 登出
+     * @param session
+     * @return
+     */
     @GetMapping("/logout")
     public String logout(HttpSession session){
         session.setAttribute(Constants.CURRENT_USER,"");
         return "redirect:login";
     }
 
-
+    /**
+     * 登录认证
+     * @param username
+     * @param password
+     * @param session
+     * @param attributes
+     * @return
+     */
     @PostMapping("doLogin")
     public String doLogin(String username, String password, HttpSession session, RedirectAttributes attributes){
         try {
@@ -57,10 +72,22 @@ public class UserController extends CommonController {
         }
         return "redirect:login";
     }
+
+    /**
+     * 注册
+     * @return
+     */
     @GetMapping("/register")
     public String register(){
         return "register";
     }
+
+    /**
+     * 注册认证
+     * @param user
+     * @param attributes
+     * @return
+     */
     @PostMapping("/doRegister")
     public String doRegister(User user,RedirectAttributes attributes){
         try {

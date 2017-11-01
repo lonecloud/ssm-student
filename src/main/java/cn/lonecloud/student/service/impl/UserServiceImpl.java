@@ -28,7 +28,8 @@ public class UserServiceImpl implements IUserService {
             throw new BusinessException("用户名不存在！");
         }
         String md5Pwd = MD5Util.MD5EncodeUtf8(password);
-        User user=userMapper.selectUserByNameAndPwd(username,password);
+        //将MD5密码进行匹配
+        User user=userMapper.selectUserByNameAndPwd(username,md5Pwd);
         if (user==null){
             throw new BusinessException("用户名或者密码错误");
         }
@@ -43,6 +44,8 @@ public class UserServiceImpl implements IUserService {
             throw new BusinessException("用户名已存在！");
         }
         String md5Pwd=MD5Util.MD5EncodeUtf8(user.getPassword());
+        //将md5密码设置进去
+        user.setPassword(md5Pwd);
         int insert = userMapper.insert(user);
         if (insert==0){
             throw  new BusinessException("注册失败！");

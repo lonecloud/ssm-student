@@ -47,6 +47,7 @@
                     <label>
                         <input type="checkbox" value="remember-me">
                         记住我 </label>
+                    <a class="pull-right" href="${pageContext.request.contextPath}/user/register" id="register">注册</a>
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit" id="submitForm">登录</button>
             </form>
