@@ -1,7 +1,12 @@
 # ssm-student
 
-**技术栈**
+## 运行环境
 
+    JDK1.8+Maven
+
+**技术栈**
+- mysql
+- maven
 - Spring
 - SpringMVC
 - mybatis
