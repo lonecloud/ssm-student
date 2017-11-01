@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author lonecloud
@@ -51,10 +52,12 @@ public class StudentController extends CommonController {
      */
     @GetMapping("/loadListData")
     @ResponseBody
-    public Object loadListData(@RequestParam(value = "offset", defaultValue = "offset", required = false) int offset,
+    public Object loadListData(HttpServletRequest request,@RequestParam(value = "offset", defaultValue = "offset", required = false) int offset,
                                @RequestParam(value = "limit", defaultValue = "10", required = false) int limit,
                                @RequestParam(value = "search",required = false)String search) {
         try {
+            //TODO 将search进行转码暂时这么解决，但是不完美，以后再想办法啦
+            search=search!=null?new String(search.getBytes(StandardCharsets.ISO_8859_1.name()),StandardCharsets.UTF_8):"";
             PageListVO<Student> pageListVO = studentService.searchByPage(search,offset, limit);
             return pageListVO;
         } catch (Exception e) {

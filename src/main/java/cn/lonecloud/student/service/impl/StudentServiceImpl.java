@@ -9,6 +9,7 @@ import cn.lonecloud.student.vo.PageListVO;
 import cn.lonecloud.student.vo.R;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,7 +144,12 @@ public class StudentServiceImpl implements IStudentService {
             Student student = new Student();
             //student.setId(Integer.valueOf(items[0]));
             student.setName(items[1]);
-            student.setAge(Integer.valueOf(items[2]));
+            //判断年龄为数字;
+            int age=0;
+            if(items[2]!=null&&NumberUtils.isNumber(items[2])){
+                age=(int)Double.parseDouble(items[2]);
+            }
+            student.setAge(age);
             student.setMajor(items[3]);
             student.setCreateTime(new Date());
             studentList.add(student);
