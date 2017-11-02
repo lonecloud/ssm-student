@@ -29,5 +29,18 @@
 - 短信API接入
 - ......不仅仅局限于这些
 
+## 执行
+
+1. 下载代码
+```shell
+git clone https://github.com/lonecloud/ssm-student
+```
+2. 升级数据库运行student.sql
+3. 运行maven脚本
+```shell
+mvn compile
+mvn tomcat7:run
+```
+访问地址：http://localhost:8080/student
 
 
