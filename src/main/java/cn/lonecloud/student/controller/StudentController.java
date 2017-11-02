@@ -64,8 +64,7 @@ public class StudentController extends CommonController {
             if (e instanceof BusinessException) {
                 logger.debug(e.getMessage());
             }
-            e.printStackTrace();
-            logger.error(e.getStackTrace().toString(), e.getMessage());
+            logger.error(e.getMessage(),e.getStackTrace());
         }
         return new PageListVO<>(0);
     }

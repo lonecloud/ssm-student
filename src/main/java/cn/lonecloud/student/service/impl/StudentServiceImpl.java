@@ -102,7 +102,7 @@ public class StudentServiceImpl implements IStudentService {
             int count = studentMapper.insertBatch(studentList);
             return R.success();
         } catch (IOException e) {
-            logger.error(e.toString());
+            logger.error(e.getMessage(),e.toString());
             return R.error("导入失败");
         }
     }
@@ -116,9 +116,9 @@ public class StudentServiceImpl implements IStudentService {
                     new String[]{"id", "名字", "年龄", "学科", "创建时间"}, "updateTime");
             return file;
         } catch (IOException e) {
-            logger.error(e.toString());
+            logger.error(e.getMessage(),e.toString());
         } catch (IllegalAccessException e) {
-            logger.error(e.toString());
+            logger.error(e.getMessage(),e.toString());
         }
         return null;
     }
