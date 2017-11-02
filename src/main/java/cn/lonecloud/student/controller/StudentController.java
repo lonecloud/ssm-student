@@ -56,8 +56,8 @@ public class StudentController extends CommonController {
                                @RequestParam(value = "limit", defaultValue = "10", required = false) int limit,
                                @RequestParam(value = "search",required = false)String search) {
         try {
-            //TODO 将search进行转码暂时这么解决，但是不完美，以后再想办法啦
-            search=search!=null?new String(search.getBytes(StandardCharsets.ISO_8859_1.name()),StandardCharsets.UTF_8):"";
+            //TODO 如果使用自己本身的tomcat而且service.xml中没有设置uriEncoder='utf-8'请将下面代码打开将search进行转码暂时这么解决，但是不完美，以后再想办法啦
+            //search=search!=null?new String(search.getBytes(StandardCharsets.ISO_8859_1.name()),StandardCharsets.UTF_8):"";
             PageListVO<Student> pageListVO = studentService.searchByPage(search,offset, limit);
             return pageListVO;
         } catch (Exception e) {
