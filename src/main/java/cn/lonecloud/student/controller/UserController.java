@@ -67,8 +67,9 @@ public class UserController extends CommonController {
             if (e instanceof BusinessException){
                 logger.debug(e.getMessage());
                 attributes.addAttribute("msg",e.getMessage());
+            }else {
+                logger.error(e.getMessage(),e);
             }
-            logger.error(e.getStackTrace().toString(),e.getMessage());
         }
         return "redirect:login";
     }
