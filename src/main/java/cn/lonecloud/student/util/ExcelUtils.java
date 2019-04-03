@@ -1,6 +1,7 @@
 package cn.lonecloud.student.util;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
@@ -142,14 +143,14 @@ public class ExcelUtils {
         }
         for (int i = 0; i < dataList.size(); i++)
         {
-            row = sheet.createRow((int) i + 1);
+            row = sheet.createRow(i + 1);
             Object obj = dataList.get(i);
             if (obj!=null){
                 Class<?> clazz = obj.getClass();
                 Field[] declaredFields = clazz.getDeclaredFields();
                 int j=0;
                 for (Field field:declaredFields) {
-                    if (Arrays.asList(excludeFiledName).stream().equals(field.getName())){
+                    if (Arrays.stream(excludeFiledName).anyMatch(name->StringUtils.equals(field.getName(),name))){
                         continue;
                     }
                     field.setAccessible(true);
